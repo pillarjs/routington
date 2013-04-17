@@ -1,6 +1,6 @@
 {
   "name": "routington",
-  "description": "Trie-based URL routing",
+  "description": "Prefix tree-based URL routing",
   "version": "0.0.1",
   "main": "index.js",
   "scripts": [
