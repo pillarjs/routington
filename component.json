@@ -1,0 +1,13 @@
+{
+  "name": "routington",
+  "description": "Trie-based URL routing",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": [
+    "/lib/routington.js",
+    "/lib/define.js",
+    "/lib/match.js",
+    "/lib/node.js",
+    "/lib/parse.js"
+  ]
+}
