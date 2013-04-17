@@ -251,8 +251,6 @@ Routington.prototype.define = function (url) {
   if (!~['*', ''].indexOf(frags[frags.length - 1]))
     frags.push('')
 
-  var matches = []
-
   return Define(frags, this)
 }
 

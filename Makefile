@@ -9,4 +9,9 @@ build:
 		--out dist \
 		--name routington
 
-.PHONY: test build
+gzip: build
+	@mkdir -p build
+	@uglifyjs dist/routington.js -m -c hoist_vars=true -o build/routington.min.js
+	@gzip -c -9 build/routington.min.js > build/routington.min.js.gz
+
+.PHONY: test build gzip
