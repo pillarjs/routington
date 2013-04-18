@@ -240,4 +240,8 @@ describe('Route definitions', function () {
   it('should not support intermediary *', function () {
     // To do
   })
+
+  it('should not support /?', function () {
+    // To do
+  })
 })
