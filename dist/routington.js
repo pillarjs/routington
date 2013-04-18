@@ -200,6 +200,18 @@ require.relative = function(parent) {
 
   return localRequire;
 };
+require.register("routington//index.js", function(exports, require, module){
+module.exports = require('./lib/routington')
+
+;[
+  'define',
+  'match',
+  'node',
+  'parse'
+].forEach(function (x) {
+  require('./lib/' + x)
+})
+});
 require.register("routington//lib/routington.js", function(exports, require, module){
 var util = require('util')
 
@@ -218,27 +230,9 @@ function Routington() {
 
   node.call(this)
 }
-
-// A test for supported URLs
-// Mostly so people don't complain
-// "This URL doesn't work."
-Routington.isValidURL = function (url) {
-  // Non-null strings only
-  if (typeof url !== 'string') return false
-  // Special case for root path
-  if (url === '') return true
-  // Relative URLs only
-  if (url[0] !== '/' || url[1] === '/') return false
-  // No multi-slashes anywhere in the route
-  if (url.match(/\/{2,}/)) return false
-
-  return true
-}
 });
 require.register("routington//lib/define.js", function(exports, require, module){
 var Routington = require('./routington')
-
-Routington.define = Define
 
 /*
 
@@ -281,9 +275,9 @@ function Define(frags, root) {
   }
 
   if (!nodes.length) {
-    nodes.push({
+    nodes = [{
       name: info.name
-    })
+    }]
   }
 
   nodes = nodes.map(root.add, root)
@@ -388,7 +382,7 @@ function Node(options) {
     this.string = string
   } else if (typeof regex === 'string') {
     this._regex = regex
-    this.regex = new RegExp('^(' + regex + ')$', 'i')
+    this.regex = new RegExp('^(' + regex + ')$')
   }
 }
 

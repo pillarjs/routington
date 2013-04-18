@@ -78,4 +78,15 @@ describe('Route matching', function () {
     })
     should.not.exist(match.branch.parents[0].regex)
   })
+
+  it('should be case sensitive', function () {
+    var router = routington()
+    router.define('/asdf')
+    router.define('/:id([0-9A-F]+)')
+
+    should.not.exist(router.match('/ASDF'))
+    should.not.exist(router.match('/a0b'))
+    router.match('/asdf').should.be.ok
+    router.match('/A0B').should.be.ok
+  })
 })

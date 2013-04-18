@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": [
+    "/index.js",
     "/lib/routington.js",
     "/lib/define.js",
     "/lib/match.js",
