@@ -15,6 +15,10 @@ describe('Route definitions', function () {
     route.parents[0].should.equal(router)
 
     router.branch[''].should.equal(route)
+
+    var routes2 = router.define('/')
+    routes2.should.have.length(1)
+    routes2[0].should.equal(route)
   })
 
   it('should create a first level branch', function () {
@@ -86,30 +90,28 @@ describe('Route definitions', function () {
     var router = routington()
 
     var routes = router.define('/:id(\\w{3,30}|[0-9a-f]{24})')
-    routes.should.have.length(2)
+    routes.should.have.length(1)
 
-    var route1 = routes[0].parents[0]
-    route1.name.should.equal('id')
-    route1._regex.should.equal('\\w{3,30}')
-
-    var route2 = routes[1].parents[0]
-    route2.name.should.equal('id')
-    route2._regex.should.equal('[0-9a-f]{24}')
+    var route = routes[0].parents[0]
+    route.name.should.equal('id')
+    route._regex.should.equal('\\w{3,30}|[0-9a-f]{24}')
+    route.regex.test('asdf').should.be.ok
+    route.regex.test('1234123412341234').should.be.ok
+    route.regex.test('a').should.not.be.ok
   })
 
   it('should define multiple unnamed regex routes', function () {
     var router = routington()
 
     var routes = router.define('/(\\w{3,30}|[0-9a-f]{24})')
-    routes.should.have.length(2)
+    routes.should.have.length(1)
 
-    var route1 = routes[0].parents[0]
-    route1.name.should.equal('')
-    route1._regex.should.equal('\\w{3,30}')
-
-    var route2 = routes[1].parents[0]
-    route2.name.should.equal('')
-    route2._regex.should.equal('[0-9a-f]{24}')
+    var route = routes[0].parents[0]
+    route.name.should.equal('')
+    route._regex.should.equal('\\w{3,30}|[0-9a-f]{24}')
+    route.regex.test('asdf').should.be.ok
+    route.regex.test('1234123412341234').should.be.ok
+    route.regex.test('a').should.not.be.ok
   })
 
   it('should define a named route with a string and regex', function () {
@@ -219,5 +221,23 @@ describe('Route definitions', function () {
     routes2.should.have.length(1)
 
     routes1[0].should.equal(routes2[0])
+  })
+
+  it('should support a trailing *', function () {
+    var router = routington()
+
+    var routes = router.define('/*')
+    routes.should.have.length(1)
+    routes[0].should.equal(router)
+
+    var routes2 = router.define('/asdf/*')
+    routes.should.have.length(1)
+    var route2 = routes2[0]
+
+    route2.string.should.equal('asdf')
+  })
+
+  it('should not support intermediary *', function () {
+    // To do
   })
 })
