@@ -1,3 +1,5 @@
+var assert = require('assert')
+
 var routington = require('../')
 
 describe('Route definitions', function () {
@@ -223,29 +225,53 @@ describe('Route definitions', function () {
     routes1[0].should.equal(routes2[0])
   })
 
-  it('should support a trailing *', function () {
+  // To do:
+  // Routers like /asdf*asdf
+  it('should not support * outside a regex', function () {
     var router = routington()
 
-    var routes = router.define('/*')
-    routes.should.have.length(1)
-    routes[0].should.equal(router)
+    assert.throws(function () {
+      router.define('/*')
+    })
+    assert.throws(function () {
+      router.define('/*/')
+    })
+    assert.throws(function () {
+      router.define('/asdf/*')
+    })
+    assert.throws(function () {
+      router.define('/*asdf')
+    })
+    assert.throws(function () {
+      router.define('/asdf*')
+    })
 
-    var routes2 = router.define('/asdf/*')
-    routes.should.have.length(1)
-    var route2 = routes2[0]
-
-    route2.string.should.equal('asdf')
+    assert.doesNotThrow(function () {
+      router.define('/:id(.*)')
+    })
   })
 
-  it('should not support intermediary *', function () {
-    // To do
+  it('should support optional parameters /:param?', function () {
+    var router = routington()
+
+    var routes = router.define('/x?')
+    routes.should.have.length(2)
+    routes[0].parents[1].should.equal(routes[1].parents[1])
   })
 
   it('should not support /?', function () {
-    // To do
+    var router = routington()
+
+    assert.throws(function () {
+      router.define('/?')
+    })
   })
 
   it('should not support /*?', function () {
-    // To do
+    var router = routington()
+
+    assert.throws(function () {
+      router.define('/*?')
+    })
   })
 })
