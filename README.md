@@ -1,5 +1,9 @@
 ## Routington [![Build Status](https://travis-ci.org/berrington/routington.png)](https://travis-ci.org/berrington/routington)
 
+### Browser Support
+
+IE9+
+
 ### License
 
 WTFPL
@@ -8,4 +12,4 @@ WTFPL
 
 me@jongleberry.com
 
-@jongleberry
+[@jongleberry](https://twitter.com/jongleberry)

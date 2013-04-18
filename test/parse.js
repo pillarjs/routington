@@ -101,4 +101,8 @@ describe('Parse', function () {
       regex: ''
     })
   })
+
+  it('should throw on invalid parameters', function () {
+    // To do
+  })
 })
