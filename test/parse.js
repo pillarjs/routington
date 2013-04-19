@@ -1,4 +1,7 @@
+var assert = require('assert')
+
 var routington = require('../')
+
 var parse = routington.parse
 
 describe('Parse', function () {
@@ -81,7 +84,9 @@ describe('Parse', function () {
   })
 
   it('should throw on invalid pipe separated strings', function () {
-    parse('asdf|$$$').should.throw()
+    assert.throws(function () {
+      parse('asdf|$$$')
+    })
   })
 
   it('should parse unnamed regexs', function () {
@@ -103,6 +108,30 @@ describe('Parse', function () {
   })
 
   it('should throw on invalid parameters', function () {
-    // To do
+    ;[
+      '*',
+      ':id*',
+      '*a',
+      'a*',
+      ':',
+      ':()'
+    ].forEach(function (x) {
+      assert.throws(function () {
+        parse(x)
+      }, x)
+    })
+  })
+
+  it('should not throw on oddly piped parameters', function () {
+    ;[
+      'a|b',
+      'a||b',
+      ':a(|b|c)',
+      ':b(|c||d)'
+    ].forEach(function (x) {
+      assert.doesNotThrow(function () {
+        parse(x)
+      }, x)
+    })
   })
 })
