@@ -160,6 +160,14 @@ describe('Route definitions', function () {
     route2.string.should.equal('qwer')
   })
 
+  it('should support optional parameters /:param?', function () {
+    var router = routington()
+
+    var routes = router.define('/x?')
+    routes.should.have.length(2)
+    routes[0].parent.parent.should.equal(routes[1].parent.parent)
+  })
+
   it('should not duplicate string routes', function () {
     var router = routington()
 
@@ -244,33 +252,12 @@ describe('Route definitions', function () {
     assert.throws(function () {
       router.define('/asdf*')
     })
+    assert.throws(function () {
+      router.define('/*?')
+    })
 
     assert.doesNotThrow(function () {
       router.define('/:id(.*)')
-    })
-  })
-
-  it('should support optional parameters /:param?', function () {
-    var router = routington()
-
-    var routes = router.define('/x?')
-    routes.should.have.length(2)
-    routes[0].parent.parent.should.equal(routes[1].parent.parent)
-  })
-
-  it('should not support /?', function () {
-    var router = routington()
-
-    assert.throws(function () {
-      router.define('/?')
-    })
-  })
-
-  it('should not support /*?', function () {
-    var router = routington()
-
-    assert.throws(function () {
-      router.define('/*?')
     })
   })
 })
