@@ -206,29 +206,88 @@ module.exports = require('./lib/routington')
 ;[
   'define',
   'match',
-  'node',
   'parse'
 ].forEach(function (x) {
   require('./lib/' + x)
 })
 });
 require.register("routington//lib/routington.js", function(exports, require, module){
-var util = require('util')
-
-var node = require('./node')
-
-util.inherits(Routington, node)
-
 module.exports = Routington
 
-Routington.node = node
-
-// Basically just creates a top level node
-function Routington() {
+function Routington(options) {
   if (!(this instanceof Routington))
     return new Routington()
 
-  node.call(this)
+  options = options || {}
+
+  this.child = {}
+  this.children = []
+  this.ancestors = []
+  this.name = options.name || ''
+
+  var string = options.string
+  var regex = options.regex
+
+  if (typeof string === 'string') {
+    this.string = string
+  } else if (typeof regex === 'string') {
+    this._regex = regex
+    this.regex = new RegExp('^(' + regex + ')$', 'i')
+  }
+}
+
+// Find || (create && attach) a child node
+Routington.prototype.add = function (options) {
+  return this.find(options)
+    || this.attach(options)
+}
+
+// Find a child node based on a bunch of options
+Routington.prototype.find = function (options) {
+  var child
+
+  // Find by string
+  if (
+    typeof options.string === 'string' &&
+    (child = this.child[options.string])
+  ) return child
+
+  if (options.string)
+    return
+
+  var children = this.children
+  var l = children.length
+
+  // Find by regex
+  if (typeof options.regex === 'string')
+    for (var i = 0; i < l; i++)
+      if ((child = children[i])._regex === options.regex)
+        return child
+
+  if (options.regex)
+    return
+
+  // Find by name
+  var name = options.name || ''
+
+  for (var j = 0; j < l; j++)
+    if ((child = children[j]).name === name)
+      return child
+}
+
+// Attach a node to this node
+Routington.prototype.attach = function (node) {
+  if (!(node instanceof Routington))
+    node = new Routington(node)
+
+  node.ancestors = [this].concat(this.ancestors)
+
+  if (node.string == null)
+    this.children.push(node)
+  else
+    this.child[node.string] = node
+
+  return node
 }
 });
 require.register("routington//lib/define.js", function(exports, require, module){
@@ -238,7 +297,7 @@ var Routington = require('./routington')
 
   @url {string}
 
-  returns []node
+  returns []routington
 
 */
 Routington.prototype.define = function (url) {
@@ -316,7 +375,7 @@ var Routington = require('./routington')
     param: {
       {name}: {string}
     },
-    node: {node}
+    node: {routington}
   }
 
 */
@@ -340,7 +399,7 @@ Routington.prototype.match = function (url) {
     length = frags.length
 
     // Check by name
-    if (node = root.branch[frag]) {
+    if (node = root.child[frag]) {
       if (name = node.name)
         match.param[name] = frag
 
@@ -354,7 +413,7 @@ Routington.prototype.match = function (url) {
     }
 
     // Check array of names/regexs
-    nodes = root.branches
+    nodes = root.children
     for (var i = 0, l = nodes.length; i < l; i++) {
       node = nodes[i]
 
@@ -372,82 +431,6 @@ Routington.prototype.match = function (url) {
       }
     }
   }
-}
-});
-require.register("routington//lib/node.js", function(exports, require, module){
-module.exports = Node
-
-function Node(options) {
-  options = options || {}
-
-  this.branch = {}
-  this.branches = []
-  this.parents = []
-  this.name = options.name || ''
-
-  var string = options.string
-  var regex = options.regex
-
-  if (typeof string === 'string') {
-    this.string = string
-  } else if (typeof regex === 'string') {
-    this._regex = regex
-    this.regex = new RegExp('^(' + regex + ')$', 'i')
-  }
-}
-
-// Find or create && attach
-Node.prototype.add = function (options) {
-  return this.find(options)
-    || this.attach(options)
-}
-
-// Find a node based on a bunch of options
-Node.prototype.find = function (options) {
-  var branch
-
-  // Find by string
-  if (
-    typeof options.string === 'string' &&
-    (branch = this.branch[options.string])
-  ) return branch
-
-  if (options.string)
-    return
-
-  var branches = this.branches
-  var l = branches.length
-
-  // Find by regex
-  if (typeof options.regex === 'string')
-    for (var i = 0; i < l; i++)
-      if ((branch = branches[i])._regex === options.regex)
-        return branch
-
-  if (options.regex)
-    return
-
-  // Find by name
-  var name = options.name || ''
-
-  for (var j = 0; j < l; j++)
-    if ((branch = branches[j]).name === name)
-      return branch
-}
-
-// Attach a node to this node
-Node.prototype.attach = function (node) {
-  if (!(node instanceof Node))
-    node = new Node(node)
-
-  node.parents = [this].concat(this.parents)
-
-  if (node.string == null)
-    this.branches.push(node)
-  else
-    this.branch[node.string] = node
-
-  return node
 }
 });
 require.register("routington//lib/parse.js", function(exports, require, module){
@@ -486,7 +469,7 @@ function Parse(string) {
   }
 
   // Pipe-separated strings
-  if (/^[.-\w][.-\w\|]+[.-\w]$/.test(string)) {
+  if (/^[\w-][\w\|-]+[\w-]$/.test(string)) {
     string.split('|').forEach(function (x) {
       options.string[x] = true
     })
@@ -506,7 +489,7 @@ function Parse(string) {
   // Return if there are no attached regular expressions
   // ie when no ()
   if (!/^\(.+\)$/.test(string)) {
-    if (/(\.*\)/.test(string))
+    if (/\(.*\)/.test(string))
       throw new Error('Invalid regular expression capture: ' + og)
     else
       return options
@@ -528,7 +511,7 @@ function Parse(string) {
 
 function isValidSlug(x) {
   return x === ''
-    || /^[.-\w]+$/.test(x)
+    || /^[\w-]+$/.test(x)
 }
 });
 require.alias("routington/index.js", "routington/index.js");
