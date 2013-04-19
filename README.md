@@ -56,7 +56,7 @@ Then, after all the nodes are defined, I can manually fix them through the node 
 
 ```js
 // The node for `/page`
-var node = router.child['page']
+var page = router.child['page']
 
 // Name all the children as `id`
 Object.keys(page.child).map(function (name) {

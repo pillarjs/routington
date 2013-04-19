@@ -8,7 +8,6 @@
     "/lib/routington.js",
     "/lib/define.js",
     "/lib/match.js",
-    "/lib/node.js",
     "/lib/parse.js"
   ]
 }

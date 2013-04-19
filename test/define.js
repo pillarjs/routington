@@ -5,13 +5,13 @@ var routington = require('../')
 describe('Route definitions', function () {
   it('should create the root', function () {
     var router = routington()
-    router.should.be.an.instanceof(routington.node)
+    router.should.be.an.instanceof(routington)
 
     var routes = router.define('')
     routes.should.have.length(1)
 
     var route = routes[0]
-    route.should.be.an.instanceof(routington.node)
+    route.should.be.an.instanceof(routington)
     route.string.should.equal('')
     route.name.should.equal('')
     route.ancestors[0].should.equal(router)
