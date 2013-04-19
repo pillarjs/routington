@@ -5,7 +5,8 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "component": "*"
+    "component": "*",
+    "express": "*"
   },
   "scripts": {
     "test": "make test"
