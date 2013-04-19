@@ -14,9 +14,9 @@ describe('Route matching', function () {
 
   it('should match a top level path', function () {
     var router = routington()
-    var routes = router.define('/favicon.ico')
+    var routes = router.define('/favicon')
 
-    var match = router.match('/favicon.ico')
+    var match = router.match('/favicon')
     match.param.should.eql({})
     match.node.should.equal(routes[0])
   })

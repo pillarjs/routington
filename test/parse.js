@@ -25,11 +25,11 @@ describe('Parse', function () {
     })
   })
 
-  it('should allow -, _, and . in strings', function () {
-    parse('a-b_-.a').should.eql({
+  it('should allow - and _ in strings', function () {
+    parse('a-b_-a').should.eql({
       name: '',
       string: {
-        'a-b_-.a': true
+        'a-b_-a': true
       },
       regex: ''
     })
