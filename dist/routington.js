@@ -242,48 +242,52 @@ var Routington = require('./routington')
 
 */
 Routington.prototype.define = function (url) {
+  if (typeof url !== 'string')
+    throw new Error('Only strings can be defined.')
+
   var frags = url.split('/').slice(1)
-  // Fragments must always end with a '' || '*'
-  if (!~['*', ''].indexOf(frags[frags.length - 1]))
+  if (frags[frags.length - 1] !== '')
     frags.push('')
 
   return Define(frags, this)
 }
 
 function Define(frags, root) {
-  var length = frags.length
   var frag = frags[0]
-  if (frag === '*' && length === 1)
-    return [root]
-
   var info = Routington.parse(frag)
-  frags = frags.slice(1)
-  length--
+  var name = info.name
+
+  if (frag === '?')
+    throw new TypeError('? parameters are not supported.')
+  if (frag === '*')
+    throw new TypeError('* parameters are not supported.')
+  if (frag[0] === '*' || frag[frag.length - 1] === '*')
+    throw new TypeError('* are not supported outside a regex.')
 
   var nodes = Object.keys(info.string).map(function (x) {
     return {
-      name: info.name,
+      name: name,
       string: x
     }
   })
 
   if (info.regex) {
     nodes.push({
-      name: info.name,
+      name: name,
       regex: info.regex
     })
   }
 
   if (!nodes.length) {
     nodes = [{
-      name: info.name
+      name: name
     }]
   }
 
   nodes = nodes.map(root.add, root)
 
-  return length
-    ? flatten(nodes.map(Define.bind(null, frags)))
+  return frags.length - 1
+    ? flatten(nodes.map(Define.bind(null, frags.slice(1))))
     : nodes
 }
 
@@ -312,7 +316,7 @@ var Routington = require('./routington')
     param: {
       {name}: {string}
     },
-    branch: {node}
+    node: {node}
   }
 
 */
@@ -328,7 +332,7 @@ Routington.prototype.match = function (url) {
     length = frags.push('')
 
   var root = this
-  var frag, branch, branches, regex, name
+  var frag, node, nodes, regex, name
 
   top:
   while (length) {
@@ -336,28 +340,34 @@ Routington.prototype.match = function (url) {
     length = frags.length
 
     // Check by name
-    if (branch = root.branch[frag]) {
-      if (name = branch.name) match.param[name] = frag
+    if (node = root.branch[frag]) {
+      if (name = node.name)
+        match.param[name] = frag
+
       if (!length) {
-        match.branch = branch
+        match.node = node
         return match
       }
-      root = branch
+
+      root = node
       continue top
     }
 
     // Check array of names/regexs
-    branches = root.branches
-    for (var i = 0, l = branches.length; i < l; i++) {
-      branch = branches[i]
+    nodes = root.branches
+    for (var i = 0, l = nodes.length; i < l; i++) {
+      node = nodes[i]
 
-      if (!(regex = branch.regex) || regex.test(frag)) {
-        if (name = branch.name) match.param[name] = frag
+      if (!(regex = node.regex) || regex.test(frag)) {
+        if (name = node.name)
+          match.param[name] = frag
+
         if (!length) {
-          match.branch = branch
+          match.node = node
           return match
         }
-        root = branch
+
+        root = node
         continue top
       }
     }
@@ -382,13 +392,14 @@ function Node(options) {
     this.string = string
   } else if (typeof regex === 'string') {
     this._regex = regex
-    this.regex = new RegExp('^(' + regex + ')$')
+    this.regex = new RegExp('^(' + regex + ')$', 'i')
   }
 }
 
 // Find or create && attach
 Node.prototype.add = function (options) {
-  return this.find(options) || this.attach(options)
+  return this.find(options)
+    || this.attach(options)
 }
 
 // Find a node based on a bunch of options
@@ -401,7 +412,8 @@ Node.prototype.find = function (options) {
     (branch = this.branch[options.string])
   ) return branch
 
-  if (options.string) return
+  if (options.string)
+    return
 
   var branches = this.branches
   var l = branches.length
@@ -412,7 +424,8 @@ Node.prototype.find = function (options) {
       if ((branch = branches[i])._regex === options.regex)
         return branch
 
-  if (options.regex) return
+  if (options.regex)
+    return
 
   // Find by name
   var name = options.name || ''
@@ -429,11 +442,10 @@ Node.prototype.attach = function (node) {
 
   node.parents = [this].concat(this.parents)
 
-  if (node.string == null) {
+  if (node.string == null)
     this.branches.push(node)
-  } else {
+  else
     this.branch[node.string] = node
-  }
 
   return node
 }
@@ -441,11 +453,20 @@ Node.prototype.attach = function (node) {
 require.register("routington//lib/parse.js", function(exports, require, module){
 var Routington = require('./routington')
 
-Routington.parse = Parse
+Routington.parse = function (string) {
+  var options = Parse(string)
 
-var slug = /^[.-\w]+$/
+  if (
+    !options.name &&
+    !options.regex &&
+    !Object.keys(options.string).length
+  ) throw new Error('Invalid parsed string: ' + string)
+
+  return options
+}
 
 function Parse(string) {
+  var og = string
   var options = {
     name: '',
     string: {},
@@ -459,7 +480,7 @@ function Parse(string) {
   }
 
   // Is a simple string
-  if (string === '' || slug.test(string)) {
+  if (isValidSlug(string)) {
     options.string[string] = true
     return options
   }
@@ -467,9 +488,6 @@ function Parse(string) {
   // Pipe-separated strings
   if (/^[.-\w][.-\w\|]+[.-\w]$/.test(string)) {
     string.split('|').forEach(function (x) {
-      if (!slug.test(x))
-        throw new TypeError('Invalid pipe separated strings: ' + string)
-
       options.string[x] = true
     })
     return options
@@ -477,33 +495,40 @@ function Parse(string) {
 
   // Find a parameter name for the string
   string = string.replace(/^:\w+\b/, function (_) {
-    if (_)
-      options.name = _.slice(1)
-
-    if (!options.name)
-      throw new TypeError('Invalid parameter name for:' + string)
-
+    options.name = _.slice(1)
     return ''
   })
 
+  // Return if the string is now empty
+  if (!string)
+    return options
+
   // Return if there are no attached regular expressions
   // ie when no ()
-  if (!/^\(.+\)$/.test(string))
-    return options
+  if (!/^\(.+\)$/.test(string)) {
+    if (/(\.*\)/.test(string))
+      throw new Error('Invalid regular expression capture: ' + og)
+    else
+      return options
+  }
 
   // Regular expressions are split by a |
   // We remove any that can simply be strings
+  // This may mess up the regex
   options.regex = string.slice(1, -1).split('|').filter(function (x) {
-    if (slug.test(x)) {
-      options.string[x] = true
-      return false
-    }
+    if (!isValidSlug(x))
+      return true
 
-    // Only want regular expressions
-    return x
+    options.string[x] = true
+    return false
   }).join('|')
 
   return options
+}
+
+function isValidSlug(x) {
+  return x === ''
+    || /^[.-\w]+$/.test(x)
 }
 });
 require.alias("routington/index.js", "routington/index.js");
