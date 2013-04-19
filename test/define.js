@@ -14,16 +14,16 @@ describe('Route definitions', function () {
     route.should.be.an.instanceof(routington.node)
     route.string.should.equal('')
     route.name.should.equal('')
-    route.parents[0].should.equal(router)
+    route.ancestors[0].should.equal(router)
 
-    router.branch[''].should.equal(route)
+    router.child[''].should.equal(route)
 
     var routes2 = router.define('/')
     routes2.should.have.length(1)
     routes2[0].should.equal(route)
   })
 
-  it('should create a first level branch', function () {
+  it('should create a first level child', function () {
     var router = routington()
 
     var routes = router.define('/asdf')
@@ -32,16 +32,16 @@ describe('Route definitions', function () {
     var route = routes[0]
     route.string.should.equal('')
     route.name.should.equal('')
-    route.parents[1].should.equal(router)
-    route.parents[0].branch[''].should.equal(route)
+    route.ancestors[1].should.equal(router)
+    route.ancestors[0].child[''].should.equal(route)
 
-    route = route.parents[0]
+    route = route.ancestors[0]
     route.string.should.equal('asdf')
     route.name.should.equal('')
-    route.parents[0].should.equal(router)
+    route.ancestors[0].should.equal(router)
   })
 
-  it('should create a second level branch', function () {
+  it('should create a second level child', function () {
     var router = routington()
 
     var routes = router.define('/asdf/wqer')
@@ -50,11 +50,11 @@ describe('Route definitions', function () {
     var route = routes[0]
     route.string.should.equal('')
 
-    var parents = route.parents
-    parents.should.have.length(3)
-    parents[0].string.should.equal('wqer')
-    parents[1].string.should.equal('asdf')
-    parents[2].should.equal(router)
+    var ancestors = route.ancestors
+    ancestors.should.have.length(3)
+    ancestors[0].string.should.equal('wqer')
+    ancestors[1].string.should.equal('asdf')
+    ancestors[2].should.equal(router)
   })
 
   it('should define a named route', function () {
@@ -67,7 +67,7 @@ describe('Route definitions', function () {
     route.name.should.equal('')
     route.string.should.equal('')
 
-    var parent = route.parents[0]
+    var parent = route.ancestors[0]
     parent.name.should.equal('id')
   })
 
@@ -81,7 +81,7 @@ describe('Route definitions', function () {
     route.name.should.equal('')
     route.string.should.equal('')
 
-    var parent = route.parents[0]
+    var parent = route.ancestors[0]
     parent.name.should.equal('id')
     parent._regex.should.equal('\\w{3,30}')
     parent.regex.test('asd').should.be.ok
@@ -94,7 +94,7 @@ describe('Route definitions', function () {
     var routes = router.define('/:id(\\w{3,30}|[0-9a-f]{24})')
     routes.should.have.length(1)
 
-    var route = routes[0].parents[0]
+    var route = routes[0].ancestors[0]
     route.name.should.equal('id')
     route._regex.should.equal('\\w{3,30}|[0-9a-f]{24}')
     route.regex.test('asdf').should.be.ok
@@ -108,7 +108,7 @@ describe('Route definitions', function () {
     var routes = router.define('/(\\w{3,30}|[0-9a-f]{24})')
     routes.should.have.length(1)
 
-    var route = routes[0].parents[0]
+    var route = routes[0].ancestors[0]
     route.name.should.equal('')
     route._regex.should.equal('\\w{3,30}|[0-9a-f]{24}')
     route.regex.test('asdf').should.be.ok
@@ -122,11 +122,11 @@ describe('Route definitions', function () {
     var routes = router.define('/:id(\\w{3,30}|asdf)')
     routes.should.have.length(2)
 
-    var route1 = routes[1].parents[0]
+    var route1 = routes[1].ancestors[0]
     route1.name.should.equal('id')
     route1._regex.should.equal('\\w{3,30}')
 
-    var route2 = routes[0].parents[0]
+    var route2 = routes[0].ancestors[0]
     route2.name.should.equal('id')
     route2.string.should.equal('asdf')
   })
@@ -137,11 +137,11 @@ describe('Route definitions', function () {
     var routes = router.define('/asdf|qwer')
     routes.should.have.length(2)
 
-    var route1 = routes[0].parents[0]
+    var route1 = routes[0].ancestors[0]
     route1.name.should.equal('')
     route1.string.should.equal('asdf')
 
-    var route2 = routes[1].parents[0]
+    var route2 = routes[1].ancestors[0]
     route2.name.should.equal('')
     route2.string.should.equal('qwer')
   })
@@ -152,11 +152,11 @@ describe('Route definitions', function () {
     var routes = router.define('/:id(asdf|qwer)')
     routes.should.have.length(2)
 
-    var route1 = routes[0].parents[0]
+    var route1 = routes[0].ancestors[0]
     route1.name.should.equal('id')
     route1.string.should.equal('asdf')
 
-    var route2 = routes[1].parents[0]
+    var route2 = routes[1].ancestors[0]
     route2.name.should.equal('id')
     route2.string.should.equal('qwer')
   })
@@ -166,11 +166,11 @@ describe('Route definitions', function () {
 
     var routes2 = router.define('/asdf')
     routes2.should.have.length(1)
-    var route2 = routes2[0].parents[0]
+    var route2 = routes2[0].ancestors[0]
 
     var routes1 = router.define('/:id(asdf)')
     routes1.should.have.length(1)
-    var route1 = routes1[0].parents[0]
+    var route1 = routes1[0].ancestors[0]
 
     route1.should.equal(route2)
     route1.name.should.equal('')
@@ -182,18 +182,18 @@ describe('Route definitions', function () {
 
       var routes1 = router.define('/:a(\\w{3,30})')
       routes1.should.have.length(1)
-      var route1 = routes1[0].parents[0]
+      var route1 = routes1[0].ancestors[0]
 
       var routes2 = router.define('/:b(\\w{3,30})')
       routes2.should.have.length(1)
-      var route2 = routes2[0].parents[0]
+      var route2 = routes2[0].ancestors[0]
 
       route1.should.equal(route2)
       route1.name.should.equal('a')
       route2.name.should.equal('a')
   })
 
-  it('should multiply every branch', function () {
+  it('should multiply every child', function () {
       var router = routington()
 
       router.define('/a|b/c|d').should.have.length(4)
@@ -256,7 +256,7 @@ describe('Route definitions', function () {
 
     var routes = router.define('/x?')
     routes.should.have.length(2)
-    routes[0].parents[1].should.equal(routes[1].parents[1])
+    routes[0].ancestors[1].should.equal(routes[1].ancestors[1])
   })
 
   it('should not support /?', function () {
