@@ -9,7 +9,7 @@ describe('Route matching', function () {
 
     var match = router.match('')
     match.param.should.eql({})
-    match.branch.should.equal(routes[0])
+    match.node.should.equal(routes[0])
   })
 
   it('should match a top level path', function () {
@@ -18,7 +18,7 @@ describe('Route matching', function () {
 
     var match = router.match('/favicon.ico')
     match.param.should.eql({})
-    match.branch.should.equal(routes[0])
+    match.node.should.equal(routes[0])
   })
 
   it('should match a named parameter', function () {
@@ -29,7 +29,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'asdf'
     })
-    match.branch.should.equal(routes[0])
+    match.node.should.equal(routes[0])
   })
 
   it('should match a regex', function () {
@@ -40,7 +40,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'asdf'
     })
-    match.branch.should.equal(route)
+    match.node.should.equal(route)
 
     should.not.exist(router.match('/a'))
   })
@@ -54,7 +54,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'asdfasdfasdfasdfasdfasdf'
     })
-    match.branch.parents[0]._regex.should.equal('\\w{3,30}')
+    match.node.parents[0]._regex.should.equal('\\w{3,30}')
   })
 
   it('should match strings over regex', function () {
@@ -64,7 +64,7 @@ describe('Route matching', function () {
 
     var match = router.match('/asdf')
     match.param.should.eql({})
-    match.branch.parents[0].string.should.equal('asdf')
+    match.node.parents[0].string.should.equal('asdf')
   })
 
   it('should not overwrite generically named routes', function () {
@@ -76,17 +76,17 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'a'
     })
-    should.not.exist(match.branch.parents[0].regex)
+    should.not.exist(match.node.parents[0].regex)
   })
 
-  it('should be case sensitive', function () {
+  it('should be case sensitive with strings, but not regexs', function () {
     var router = routington()
     router.define('/asdf')
     router.define('/:id([0-9A-F]+)')
 
     should.not.exist(router.match('/ASDF'))
-    should.not.exist(router.match('/a0b'))
     router.match('/asdf').should.be.ok
+    router.match('/a0b').should.be.ok
     router.match('/A0B').should.be.ok
   })
 })
