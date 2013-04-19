@@ -54,7 +54,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'asdfasdfasdfasdfasdfasdf'
     })
-    match.node.ancestors[0]._regex.should.equal('\\w{3,30}')
+    match.node.parent._regex.should.equal('\\w{3,30}')
   })
 
   it('should match strings over regex', function () {
@@ -64,7 +64,7 @@ describe('Route matching', function () {
 
     var match = router.match('/asdf')
     match.param.should.eql({})
-    match.node.ancestors[0].string.should.equal('asdf')
+    match.node.parent.string.should.equal('asdf')
   })
 
   it('should not overwrite generically named routes', function () {
@@ -76,7 +76,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'a'
     })
-    should.not.exist(match.node.ancestors[0].regex)
+    should.not.exist(match.node.parent.regex)
   })
 
   it('should be case sensitive with strings, but not regexs', function () {

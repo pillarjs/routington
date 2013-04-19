@@ -222,7 +222,6 @@ function Routington(options) {
 
   this.child = {}
   this.children = []
-  this.ancestors = []
   this.name = options.name || ''
 
   var string = options.string
@@ -280,7 +279,7 @@ Routington.prototype.attach = function (node) {
   if (!(node instanceof Routington))
     node = new Routington(node)
 
-  node.ancestors = [this].concat(this.ancestors)
+  node.parent = this
 
   if (node.string == null)
     this.children.push(node)
@@ -295,20 +294,25 @@ var Routington = require('./routington')
 
 /*
 
-  @url {string}
+  @route {string}
 
   returns []routington
 
 */
-Routington.prototype.define = function (url) {
-  if (typeof url !== 'string')
+Routington.prototype.define = function (route) {
+  if (typeof route !== 'string')
     throw new Error('Only strings can be defined.')
 
-  var frags = url.split('/').slice(1)
+  var frags = route.split('/').slice(1)
   if (frags[frags.length - 1] !== '')
     frags.push('')
 
-  return Define(frags, this)
+  try {
+    return Define(frags, this)
+  } catch (err) {
+    err.route = route
+    throw err
+  }
 }
 
 function Define(frags, root) {
