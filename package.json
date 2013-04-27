@@ -10,5 +10,20 @@
   },
   "scripts": {
     "test": "make test"
-  }
+  },
+  "author": {
+    "name": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "twitter": "https://twitter.com/jongleberry"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/berrington/routington.git"
+  },
+  "bugs": {
+    "url": "https://github.com/berrington/routington/issues",
+    "email": "me@jongleberry.com"
+  },
+  "license": "WTFPL"
 }

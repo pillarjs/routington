@@ -1,6 +1,7 @@
 {
   "name": "routington",
   "description": "Trie-based URL Routing",
+  "repo": "berrington/routington",
   "version": "0.0.1",
   "main": "index.js",
   "scripts": [
