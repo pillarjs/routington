@@ -1,12 +1,11 @@
 {
   "name": "routington",
   "description": "Trie-based URL Routing",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "component": "*",
-    "express": "*"
+    "component": "*"
   },
   "scripts": {
     "test": "make test"

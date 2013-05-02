@@ -54,7 +54,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'asdfasdfasdfasdfasdfasdf'
     })
-    match.node.parent._regex.should.equal('\\w{3,30}')
+    match.node.parent.regex.toString().should.equal('/^(\\w{3,30})$/i')
   })
 
   it('should match strings over regex', function () {

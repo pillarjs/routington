@@ -224,15 +224,12 @@ function Routington(options) {
   this.children = []
   this.name = options.name || ''
 
-  var string = options.string
-  var regex = options.regex
-
-  if (typeof string === 'string') {
-    this.string = string
-  } else if (typeof regex === 'string') {
-    this._regex = regex
-    this.regex = new RegExp('^(' + regex + ')$', 'i')
-  }
+  if (typeof options.string === 'string')
+    this.string = options.string
+  else if (typeof options.regex === 'string')
+    this.regex = new RegExp('^(' + options.regex + ')$', 'i')
+  else if (options.regex instanceof RegExp)
+    this.regex = options.regex
 }
 
 // Find || (create && attach) a child node
@@ -243,35 +240,19 @@ Routington.prototype.add = function (options) {
 
 // Find a child node based on a bunch of options
 Routington.prototype.find = function (options) {
-  var child
-
   // Find by string
-  if (
-    typeof options.string === 'string' &&
-    (child = this.child[options.string])
-  ) return child
+  if (typeof options.string === 'string')
+    return this.child[options.string]
 
-  if (options.string)
-    return
-
+  var child
   var children = this.children
   var l = children.length
 
-  // Find by regex
-  if (typeof options.regex === 'string')
-    for (var i = 0; i < l; i++)
-      if ((child = children[i])._regex === options.regex)
-        return child
-
-  if (options.regex)
-    return
-
   // Find by name
-  var name = options.name || ''
-
-  for (var j = 0; j < l; j++)
-    if ((child = children[j]).name === name)
-      return child
+  if (options.name)
+    for (var j = 0; j < l; j++)
+      if ((child = children[j]).name === options.name)
+        return child
 }
 
 // Attach a node to this node
@@ -301,7 +282,7 @@ var Routington = require('./routington')
 */
 Routington.prototype.define = function (route) {
   if (typeof route !== 'string')
-    throw new Error('Only strings can be defined.')
+    throw new TypeError('Only strings can be defined.')
 
   var frags = route.split('/').slice(1)
   if (frags[frags.length - 1] !== '')
@@ -319,13 +300,6 @@ function Define(frags, root) {
   var frag = frags[0]
   var info = Routington.parse(frag)
   var name = info.name
-
-  if (frag === '?')
-    throw new TypeError('? parameters are not supported.')
-  if (frag === '*')
-    throw new TypeError('* parameters are not supported.')
-  if (frag[0] === '*' || frag[frag.length - 1] === '*')
-    throw new TypeError('* are not supported outside a regex.')
 
   var nodes = Object.keys(info.string).map(function (x) {
     return {
@@ -513,5 +487,5 @@ if (typeof exports == "object") {
 } else if (typeof define == "function" && define.amd) {
   define(function(){ return require("routington"); });
 } else {
-  window["routington"] = require("routington");
+  this["routington"] = require("routington");
 }})();

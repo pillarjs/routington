@@ -82,7 +82,7 @@ describe('Route definitions', function () {
 
     var parent = route.parent
     parent.name.should.equal('id')
-    parent._regex.should.equal('\\w{3,30}')
+    parent.regex.toString().should.equal('/^(\\w{3,30})$/i')
     parent.regex.test('asd').should.be.ok
     parent.regex.test('a').should.not.be.ok
   })
@@ -95,7 +95,7 @@ describe('Route definitions', function () {
 
     var route = routes[0].parent
     route.name.should.equal('id')
-    route._regex.should.equal('\\w{3,30}|[0-9a-f]{24}')
+    route.regex.toString().should.equal('/^(\\w{3,30}|[0-9a-f]{24})$/i')
     route.regex.test('asdf').should.be.ok
     route.regex.test('1234123412341234').should.be.ok
     route.regex.test('a').should.not.be.ok
@@ -109,7 +109,7 @@ describe('Route definitions', function () {
 
     var route = routes[0].parent
     route.name.should.equal('')
-    route._regex.should.equal('\\w{3,30}|[0-9a-f]{24}')
+    route.regex.toString().should.equal('/^(\\w{3,30}|[0-9a-f]{24})$/i')
     route.regex.test('asdf').should.be.ok
     route.regex.test('1234123412341234').should.be.ok
     route.regex.test('a').should.not.be.ok
@@ -123,7 +123,7 @@ describe('Route definitions', function () {
 
     var route1 = routes[1].parent
     route1.name.should.equal('id')
-    route1._regex.should.equal('\\w{3,30}')
+    route1.regex.toString().should.equal('/^(\\w{3,30})$/i')
 
     var route2 = routes[0].parent
     route2.name.should.equal('id')
@@ -184,22 +184,6 @@ describe('Route definitions', function () {
     route2.name.should.equal('')
   })
 
-  it('should not duplicate regex routes', function () {
-      var router = routington()
-
-      var routes1 = router.define('/:a(\\w{3,30})')
-      routes1.should.have.length(1)
-      var route1 = routes1[0].parent
-
-      var routes2 = router.define('/:b(\\w{3,30})')
-      routes2.should.have.length(1)
-      var route2 = routes2[0].parent
-
-      route1.should.equal(route2)
-      route1.name.should.equal('a')
-      route2.name.should.equal('a')
-  })
-
   it('should multiply every child', function () {
       var router = routington()
 
@@ -239,9 +223,6 @@ describe('Route definitions', function () {
 
     assert.throws(function () {
       router.define('/*')
-    })
-    assert.throws(function () {
-      router.define('/*/')
     })
     assert.throws(function () {
       router.define('/asdf/*')
