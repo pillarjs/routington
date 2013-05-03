@@ -89,4 +89,12 @@ describe('Route matching', function () {
     router.match('/a0b').should.be.ok
     router.match('/A0B').should.be.ok
   })
+
+  it('should not match Object.prototype properties', function () {
+    var router = routington()
+    router.define('/')
+
+    should.not.exist(router.match('/__proto__'))
+    should.not.exist(router.match('/hasOwnProperty'))
+  })
 })
