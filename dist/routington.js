@@ -227,7 +227,10 @@ function Routington(options) {
   if (typeof options.string === 'string')
     this.string = options.string
   else if (typeof options.regex === 'string')
-    this.regex = new RegExp('^(' + options.regex + ')$', 'i')
+    this.regex = new RegExp(
+      '^(' + options.regex + ')$',
+      options.flag == null ? 'i' : options.flag
+    )
   else if (options.regex instanceof RegExp)
     this.regex = options.regex
 }
@@ -408,6 +411,9 @@ Routington.prototype.match = function (url) {
         continue top
       }
     }
+
+    // No string or regex match, 404
+    return
   }
 }
 });
