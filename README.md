@@ -19,7 +19,7 @@ var router = routington()
 
 #### Node
 
-Every node on a tree is an instance of `Node`. You only construct the root. `node` on the other hand has the following properties:
+Every node on a tree is an instance of `Node`. You only construct the root. A `node` has the following properties:
 
 - `child {}Node` - String based child definitions. For example, `node.child['post']` will return a child node with `node.string === 'post'`
 - `children []Node` - Name/regex based child definitions
