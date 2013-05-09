@@ -4,7 +4,7 @@ Routington is a [trie](http://en.wikipedia.org/wiki/Trie)-based URL router. Its 
 
 The purpose of this router isn't for performance, but to bring more structure to URL routing. The intention is for you to build a framework on top of it either on node.js or the browser.
 
-For a node.js implementation, we have built [connectington](https://github.com/berrington/connectington). This can be used either as a standalone or as a replacement for Express' router.
+For a node.js implementation, we have built [dispatchington](https://github.com/berrington/dispatchington). This can be used either as a standalone or as a replacement for Express' router.
 
 ### API
 
