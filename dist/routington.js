@@ -220,7 +220,7 @@ function Routington(options) {
 
   options = options || {}
 
-  this.child = {}
+  this.child = Object.create(null)
   this.children = []
   this.name = options.name || ''
 

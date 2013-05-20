@@ -2,7 +2,7 @@
   "name": "routington",
   "description": "Trie-based URL Routing",
   "repo": "berrington/routington",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "index.js",
   "scripts": [
     "/index.js",
@@ -11,5 +11,5 @@
     "/lib/match.js",
     "/lib/parse.js"
   ],
-  "license": "WTFPL"
+  "license": "MIT"
 }
