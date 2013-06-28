@@ -134,4 +134,12 @@ describe('Parse', function () {
       }, x)
     })
   })
+
+  it('should support regular expressions with pipes', function () {
+    parse(':id([0-9a-f]{24}\\.[olmsta]\\.(jpg|png))').should.eql({
+      name: 'id',
+      string: {},
+      regex: '[0-9a-f]{24}\\.[olmsta]\\.(jpg|png)'
+    })
+  })
 })
