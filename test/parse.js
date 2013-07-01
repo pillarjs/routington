@@ -142,4 +142,41 @@ describe('Parse', function () {
       regex: '[0-9a-f]{24}\\.[olmsta]\\.(jpg|png)'
     })
   })
+
+  it('should parse strings with a `.` as a string', function () {
+    parse('blog.rss').should.eql({
+      name: '',
+      string: {
+        'blog.rss': true
+      },
+      regex: ''
+    })
+
+    parse(':nav(blog.rss)').should.eql({
+      name: 'nav',
+      string: {
+        'blog.rss': true
+      },
+      regex: ''
+    })
+  })
+
+  it('should parse strings with a `-` as a string', function () {
+    parse('privacy-policy').should.eql({
+      name: '',
+      string: {
+        'privacy-policy': true
+      },
+      regex: ''
+    })
+
+    parse(':nav(privacy-policy|terms-of-service)').should.eql({
+      name: 'nav',
+      string: {
+        'privacy-policy': true,
+        'terms-of-service': true
+      },
+      regex: ''
+    })
+  })
 })
