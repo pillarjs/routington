@@ -115,6 +115,7 @@ describe('Route definitions', function () {
     route.regex.test('a').should.not.be.ok
   })
 
+  /*
   it('should define a named route with a string and regex', function () {
     var router = routington()
 
@@ -129,6 +130,7 @@ describe('Route definitions', function () {
     route2.name.should.equal('id')
     route2.string.should.equal('asdf')
   })
+  */
 
   it('should define multiple string routes', function () {
     var router = routington()

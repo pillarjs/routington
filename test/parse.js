@@ -62,13 +62,11 @@ describe('Parse', function () {
     })
   })
 
-  it('should parse a named parameter with regexs and strings', function () {
+  it('should parse a named parameter with regexs and strings as a regex', function () {
     parse(':id(\\w{3,30}|asdf)').should.eql({
       name: 'id',
-      string: {
-        'asdf': true
-      },
-      regex: '\\w{3,30}'
+      string: {},
+      regex: '\\w{3,30}|asdf'
     })
   })
 
