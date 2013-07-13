@@ -162,6 +162,7 @@ describe('Route definitions', function () {
     route2.string.should.equal('qwer')
   })
 
+  /*
   it('should support optional parameters /:param?', function () {
     var router = routington()
 
@@ -169,6 +170,7 @@ describe('Route definitions', function () {
     routes.should.have.length(2)
     routes[0].parent.parent.should.equal(routes[1].parent.parent)
   })
+  */
 
   it('should not duplicate string routes', function () {
     var router = routington()
