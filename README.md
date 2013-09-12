@@ -54,7 +54,6 @@ Each fragment of the route, delimited by a `/`, can have the following signature
 - `:name` - Wildcard route matched to a name
 - `(regex)` - A regular expression match without saving the parameter (not recommended)
 - `:name(regex)`- Named regular expression match
-- `:name(string|regex)` - Named regular expression or string match
 
 Each `node` of `nodes` will always have `node.string === ''`. 
 URLs are always treated with a trailing `/` by design.
