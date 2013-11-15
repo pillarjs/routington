@@ -4,8 +4,7 @@
   "version": "0.0.10",
   "devDependencies": {
     "mocha": "*",
-    "should": "*",
-    "component": "*"
+    "should": "*"
   },
   "scripts": {
     "test": "make test"

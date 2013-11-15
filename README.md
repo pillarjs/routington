@@ -1,17 +1,17 @@
-## Routington [![Build Status](https://travis-ci.org/berrington/routington.png)](https://travis-ci.org/berrington/routington)
+## Routington [![Build Status](https://travis-ci.org/jonathanong/routington.png)](https://travis-ci.org/jonathanong/routington)
 
-Routington is a [trie](http://en.wikipedia.org/wiki/Trie)-based URL router. 
-Its goal is only to define and match URLs. 
-It does not handle methods, headers, controllers, views, etc., in anyway. 
-It is faster than traditional, linear, regular expression-matching routers, although insignficantly, 
+Routington is a [trie](http://en.wikipedia.org/wiki/Trie)-based URL router.
+Its goal is only to define and match URLs.
+It does not handle methods, headers, controllers, views, etc., in anyway.
+It is faster than traditional, linear, regular expression-matching routers, although insignficantly,
 and scales with the number of routes.
 
-The purpose of this router isn't for performance, 
-but to bring more structure to URL routing. 
+The purpose of this router isn't for performance,
+but to bring more structure to URL routing.
 The intention is for you to build a framework on top either in node.js or in the browser.
 
-For a node.js implementation, 
-we have built [dispatchington](https://github.com/berrington/dispatchington). 
+For a node.js implementation,
+we have built [dispatchington](https://github.com/berrington/dispatchington).
 This can be used either as a standalone or as a replacement for Express' router.
 
 ### API
@@ -29,7 +29,7 @@ var router = routington()
 
 Every node on a tree is an instance of `Node`. You only construct the root. A `node` has the following properties:
 
-- `child {}Node` - String based child definitions. 
+- `child {}Node` - String based child definitions.
   For example, `node.child['post']` will return a child node with `node.string === 'post'`
 - `children []Node` - Name/regex based child definitions
 - `parent Node` - The parent of the node
@@ -43,7 +43,7 @@ Every node on a tree is an instance of `Node`. You only construct the root. A `n
 var nodes = routington.define('/:identity(page|petition)/:id([0-9a-f]{24})')
 ```
 
-- `route` is a definition of a route and is an extension of Express' routing syntax. 
+- `route` is a definition of a route and is an extension of Express' routing syntax.
   `route`, however, can only be a string.
 - `nodes` is an array of `node`s.
 
@@ -55,12 +55,12 @@ Each fragment of the route, delimited by a `/`, can have the following signature
 - `(regex)` - A regular expression match without saving the parameter (not recommended)
 - `:name(regex)`- Named regular expression match
 
-Each `node` of `nodes` will always have `node.string === ''`. 
+Each `node` of `nodes` will always have `node.string === ''`.
 URLs are always treated with a trailing `/` by design.
 
-You should always name your regular expressions otherwise you can't use the captured value. 
-The regular expression is built using `new RegExp('^(' + regex + ')$', 'i')`, 
-so you need to escape your string, ie `\\w`. 
+You should always name your regular expressions otherwise you can't use the captured value.
+The regular expression is built using `new RegExp('^(' + regex + ')$', 'i')`,
+so you need to escape your string, ie `\\w`.
 You can always pre-define names or regular expressions before. For example, I can define:
 
 ```js
@@ -81,7 +81,7 @@ var match = router.match('/page/taylorswift')
 `match`, unless `null`, will be an object with the following properties:
 
 - `param` - A list of named parameters, ex, `match.param.id === 'taylorswift'`.
-- `node` - The matched node. 
+- `node` - The matched node.
   Will always have `name.string === ''`.
 
 ### Browser Support

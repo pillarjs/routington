@@ -1,9 +1,0 @@
-{
-  "name": "routington",
-  "description": "Trie-based URL Routing",
-  "version": "0.0.6",
-  "main": "/dist/routington.js",
-  "scripts": [
-    "/dist/routington.js"
-  ]
-}
