@@ -3,4 +3,7 @@ test:
 		--require should \
 		--reporter spec
 
+bench:
+	@./node_modules/.bin/matcha benchmark
+
 .PHONY: test
