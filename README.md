@@ -10,10 +10,6 @@ The purpose of this router isn't for performance,
 but to bring more structure to URL routing.
 The intention is for you to build a framework on top either in node.js or in the browser.
 
-For a node.js implementation,
-we have built [dispatchington](https://github.com/berrington/dispatchington).
-This can be used either as a standalone or as a replacement for Express' router.
-
 ### API
 
 #### node Node = Routington()
