@@ -10,6 +10,10 @@ The purpose of this router isn't for performance,
 but to bring more structure to URL routing.
 The intention is for you to build a framework on top either in node.js or in the browser.
 
+Implementations:
+
+  - [koa-trie-router](https://github.com/koajs/trie-router) - for [koa](https://github.com/koajs)
+
 ### API
 
 #### node Node = Routington()
@@ -79,6 +83,78 @@ var match = router.match('/page/taylorswift')
 - `param` - A list of named parameters, ex, `match.param.id === 'taylorswift'`.
 - `node` - The matched node.
   Will always have `name.string === ''`.
+
+### Building a Router on top of Routington
+
+Each URL you define creates a node,
+and you are free to do whatever you'd like with each node as long you don't overwrite any prototype properties (basically just `define`, `match`, and `parse`).
+Adding any features to routington shouldn't be necessary.
+
+For example, suppose you want to attach callbacks to a node by extending routington:
+
+```js
+router.get('/:id/:controller', function (req, res, next) {
+  console.log('do something')
+})
+```
+
+You can attach the middleware to a `node.GET` array:
+
+```js
+router.get = function (path, handler) {
+  var node = router.define(path)
+  node.GET = node.GET || []
+  node.GET.push(handler)
+}
+```
+
+Now, dispatching is easy:
+
+```js
+function dispatcher(req, res, next) {
+  var match = router.match(url.parse(req.url).pathname)
+  if (!match)
+    // this is a 404
+
+  var node = match.node
+  var callbacks = node[req.method]
+  if (!callbacks)
+    // this is a 405
+
+  // execute all the callbacks.
+  // async.series won't actually work here,
+  // but you get the point.
+  async.series(callbacks, next)
+}
+```
+
+Properties attached to the node will be exposed on the match.
+For example,
+suppose you wanted to label a node:
+
+```js
+var node = router.define('/:id/:controller')
+node.label = 'controller'
+```
+
+When matched, it will be available via `match.node.label`:
+
+```js
+var match = router.match('/someid/somecontroller')
+assert(match.node.label === 'label')
+```
+
+Since reaching into `match.node` is a little inconvenient and you probably don't want your end users to touch it,
+you should expose in your dispatcher:
+
+```js
+var match = router.match(url.parse(req.url).pathname)
+
+// ...
+
+req.param = match.param
+req.label = match.node.label
+```
 
 ### Browser Support
 
