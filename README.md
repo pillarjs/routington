@@ -52,7 +52,7 @@ Each fragment of the route, delimited by a `/`, can have the following signature
 - `:name(regex)`- Named regular expression match
 
 Each `node` of `nodes` will always have `node.string === ''`.
-URLs are always treated with a trailing `/` by design.
+URLs are always treated with a trailing `/` by design. __Note: this will be changed in the future__.
 
 You should always name your regular expressions otherwise you can't use the captured value.
 The regular expression is built using `new RegExp('^(' + regex + ')$', 'i')`,
