@@ -55,9 +55,6 @@ Each fragment of the route, delimited by a `/`, can have the following signature
 - `(regex)` - A regular expression match without saving the parameter (not recommended)
 - `:name(regex)`- Named regular expression match
 
-Each `node` of `nodes` will always have `node.string === ''`.
-URLs are always treated with a trailing `/` by design. __Note: this will be changed in the future__.
-
 You should always name your regular expressions otherwise you can't use the captured value.
 The regular expression is built using `new RegExp('^(' + regex + ')$', 'i')`,
 so you need to escape your string, ie `\\w`.
@@ -102,7 +99,7 @@ You can attach the middleware to a `node.GET` array:
 
 ```js
 router.get = function (path, handler) {
-  var node = router.define(path)
+  var node = router.define(path)[0]
   node.GET = node.GET || []
   node.GET.push(handler)
 }
@@ -133,7 +130,7 @@ For example,
 suppose you wanted to label a node:
 
 ```js
-var node = router.define('/:id/:controller')
+var node = router.define('/:id/:controller')[0]
 node.label = 'controller'
 ```
 
