@@ -97,4 +97,10 @@ describe('Route matching', function () {
     should.not.exist(router.match('/__proto__'))
     should.not.exist(router.match('/hasOwnProperty'))
   })
+
+  it('/:path should not match /', function () {
+    var router = routington()
+
+    should.not.exist(router.match('/:path'))
+  })
 })
