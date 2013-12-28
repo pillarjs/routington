@@ -54,7 +54,7 @@ describe('Route matching', function () {
     match.param.should.eql({
       id: 'asdfasdfasdfasdfasdfasdf'
     })
-    match.node.parent.regex.toString().should.equal('/^(\\w{3,30})$/i')
+    match.node.regex.toString().should.equal('/^(\\w{3,30})$/i')
   })
 
   it('should match strings over regex', function () {
@@ -64,7 +64,7 @@ describe('Route matching', function () {
 
     var match = router.match('/asdf')
     match.param.should.eql({})
-    match.node.parent.string.should.equal('asdf')
+    match.node.string.should.equal('asdf')
   })
 
   it('should not overwrite generically named routes', function () {

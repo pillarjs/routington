@@ -20,7 +20,7 @@ describe('Route definitions', function () {
 
     var routes2 = router.define('/')
     routes2.should.have.length(1)
-    routes2[0].should.equal(route)
+    routes2[0].parent.should.equal(route)
   })
 
   it('should create a first level child', function () {
@@ -30,13 +30,13 @@ describe('Route definitions', function () {
     routes.should.have.length(1)
 
     var route = routes[0]
-    route.string.should.equal('')
+    route.string.should.equal('asdf')
     route.name.should.equal('')
     route.parent.parent.should.equal(router)
-    route.parent.child[''].should.equal(route)
+    route.parent.child['asdf'].should.equal(route)
 
     route = route.parent
-    route.string.should.equal('asdf')
+    route.string.should.equal('')
     route.name.should.equal('')
     route.parent.should.equal(router)
   })
@@ -48,11 +48,11 @@ describe('Route definitions', function () {
     routes.should.have.length(1)
 
     var route = routes[0]
-    route.string.should.equal('')
+    route.string.should.equal('wqer')
 
     var parent = route.parent
-    parent.string.should.equal('wqer')
-    parent.parent.string.should.equal('asdf')
+    parent.string.should.equal('asdf')
+    parent.parent.string.should.equal('')
     parent.parent.parent.should.equal(router)
   })
 
@@ -63,11 +63,10 @@ describe('Route definitions', function () {
     routes.should.have.length(1)
 
     var route = routes[0]
-    route.name.should.equal('')
-    route.string.should.equal('')
+    route.name.should.equal('id')
 
     var parent = route.parent
-    parent.name.should.equal('id')
+    parent.string.should.equal('')
   })
 
   it('should define a regex route', function () {
@@ -77,14 +76,10 @@ describe('Route definitions', function () {
     routes.should.have.length(1)
 
     var route = routes[0]
-    route.name.should.equal('')
-    route.string.should.equal('')
-
-    var parent = route.parent
-    parent.name.should.equal('id')
-    parent.regex.toString().should.equal('/^(\\w{3,30})$/i')
-    parent.regex.test('asd').should.be.ok
-    parent.regex.test('a').should.not.be.ok
+    route.name.should.equal('id')
+    route.regex.toString().should.equal('/^(\\w{3,30})$/i')
+    route.regex.test('asd').should.be.ok
+    route.regex.test('a').should.not.be.ok
   })
 
   it('should define multiple regex routes', function () {
@@ -93,7 +88,7 @@ describe('Route definitions', function () {
     var routes = router.define('/:id(\\w{3,30}|[0-9a-f]{24})')
     routes.should.have.length(1)
 
-    var route = routes[0].parent
+    var route = routes[0]
     route.name.should.equal('id')
     route.regex.toString().should.equal('/^(\\w{3,30}|[0-9a-f]{24})$/i')
     route.regex.test('asdf').should.be.ok
@@ -107,7 +102,7 @@ describe('Route definitions', function () {
     var routes = router.define('/(\\w{3,30}|[0-9a-f]{24})')
     routes.should.have.length(1)
 
-    var route = routes[0].parent
+    var route = routes[0]
     route.name.should.equal('')
     route.regex.toString().should.equal('/^(\\w{3,30}|[0-9a-f]{24})$/i')
     route.regex.test('asdf').should.be.ok
@@ -115,34 +110,17 @@ describe('Route definitions', function () {
     route.regex.test('a').should.not.be.ok
   })
 
-  /*
-  it('should define a named route with a string and regex', function () {
-    var router = routington()
-
-    var routes = router.define('/:id(\\w{3,30}|asdf)')
-    routes.should.have.length(2)
-
-    var route1 = routes[1].parent
-    route1.name.should.equal('id')
-    route1.regex.toString().should.equal('/^(\\w{3,30})$/i')
-
-    var route2 = routes[0].parent
-    route2.name.should.equal('id')
-    route2.string.should.equal('asdf')
-  })
-  */
-
   it('should define multiple string routes', function () {
     var router = routington()
 
     var routes = router.define('/asdf|qwer')
     routes.should.have.length(2)
 
-    var route1 = routes[0].parent
+    var route1 = routes[0]
     route1.name.should.equal('')
     route1.string.should.equal('asdf')
 
-    var route2 = routes[1].parent
+    var route2 = routes[1]
     route2.name.should.equal('')
     route2.string.should.equal('qwer')
   })
@@ -153,35 +131,25 @@ describe('Route definitions', function () {
     var routes = router.define('/:id(asdf|qwer)')
     routes.should.have.length(2)
 
-    var route1 = routes[0].parent
+    var route1 = routes[0]
     route1.name.should.equal('id')
     route1.string.should.equal('asdf')
 
-    var route2 = routes[1].parent
+    var route2 = routes[1]
     route2.name.should.equal('id')
     route2.string.should.equal('qwer')
   })
-
-  /*
-  it('should support optional parameters /:param?', function () {
-    var router = routington()
-
-    var routes = router.define('/x?')
-    routes.should.have.length(2)
-    routes[0].parent.parent.should.equal(routes[1].parent.parent)
-  })
-  */
 
   it('should not duplicate string routes', function () {
     var router = routington()
 
     var routes2 = router.define('/asdf')
     routes2.should.have.length(1)
-    var route2 = routes2[0].parent
+    var route2 = routes2[0]
 
     var routes1 = router.define('/:id(asdf)')
     routes1.should.have.length(1)
-    var route1 = routes1[0].parent
+    var route1 = routes1[0]
 
     route1.should.equal(route2)
     route1.name.should.equal('')
@@ -196,7 +164,7 @@ describe('Route definitions', function () {
       router.define('/1|4/2|3/6|2').should.have.length(8)
   })
 
-  it('should not care for trailing slashes', function () {
+  it('should care for trailing slashes', function () {
     var router = routington()
 
     var routes1 = router.define('/asdf/')
@@ -205,10 +173,10 @@ describe('Route definitions', function () {
     var routes2 = router.define('/asdf')
     routes2.should.have.length(1)
 
-    routes1[0].should.equal(routes2[0])
+    routes1[0].should.not.equal(routes2[0])
   })
 
-  it('should not care for null or root paths', function () {
+  it('should care for null or root paths', function () {
     var router = routington()
 
     var routes1 = router.define('')
@@ -217,7 +185,7 @@ describe('Route definitions', function () {
     var routes2 = router.define('/')
     routes2.should.have.length(1)
 
-    routes1[0].should.equal(routes2[0])
+    routes1[0].should.not.equal(routes2[0])
   })
 
   // To do:
