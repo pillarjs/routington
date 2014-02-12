@@ -1,4 +1,5 @@
 var should = require('should')
+var assert = require('assert')
 
 var routington = require('../')
 
@@ -102,5 +103,24 @@ describe('Route matching', function () {
     var router = routington()
 
     should.not.exist(router.match('/:path'))
+  })
+
+  it('should match encoded paths', function () {
+    var router = routington()
+
+    router.define('/page/:name(@\\w+)')
+
+    router.match('/page/@jongleberry').should.be.ok
+    router.match('/page/%40jongleberry').should.be.ok
+  })
+
+  it('should throw on malformed paths', function () {
+    var router = routington()
+
+    router.define('/page/:name(@\\w+)')
+
+    assert.throws(function () {
+      router.match('/page/%%%')
+    })
   })
 })
