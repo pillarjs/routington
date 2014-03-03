@@ -1,9 +1,5 @@
-module.exports = require('./lib/routington')
+module.exports = require('./lib/routington');
 
-;[
-  'define',
-  'match',
-  'parse'
-].forEach(function (x) {
-  require('./lib/' + x)
-})
+require('./lib/define');
+require('./lib/match');
+require('./lib/parse');
