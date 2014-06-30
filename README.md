@@ -13,6 +13,7 @@ The intention is for you to build a framework on top either in node.js or in the
 Implementations:
 
   - [koa-trie-router](https://github.com/koajs/trie-router) - for [koa](https://github.com/koajs)
+  - [wayfarer](https://github.com/yoshuawuyts/wayfarer)
 
 ### API
 
