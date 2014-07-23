@@ -3,7 +3,7 @@
   "description": "Trie-based URL Routing",
   "version": "0.1.2",
   "scripts": [
-    "index.js",
+    "lib/index.js",
     "lib/define.js",
     "lib/match.js",
     "lib/parse.js",

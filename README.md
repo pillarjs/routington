@@ -1,4 +1,9 @@
-## Routington [![Build Status](https://travis-ci.org/jonathanong/routington.png)](https://travis-ci.org/jonathanong/routington)
+## Routington
+
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+[![Gittip][gittip-image]][gittip-url]
 
 Routington is a [trie](http://en.wikipedia.org/wiki/Trie)-based URL router.
 Its goal is only to define and match URLs.
@@ -158,26 +163,11 @@ req.label = match.node.label
 
 IE9+
 
-### License
-
-The MIT License (MIT)
-
-Copyright (c) 2013 Jonathan Ong me@jongleberry.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+[npm-image]: https://img.shields.io/npm/v/routington.svg?style=flat
+[npm-url]: https://npmjs.org/package/routington
+[travis-image]: https://img.shields.io/travis/jonathanong/routington.svg?style=flat
+[travis-url]: https://travis-ci.org/jonathanong/routington
+[coveralls-image]: https://img.shields.io/coveralls/jonathanong/routington.svg?style=flat
+[coveralls-url]: https://coveralls.io/r/jonathanong/routington?branch=master
+[gittip-image]: https://img.shields.io/gittip/jonathanong.svg?style=flat
+[gittip-url]: https://www.gittip.com/jonathanong/
