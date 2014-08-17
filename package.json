@@ -23,7 +23,7 @@
     "url": "http://jongleberry.com",
     "twitter": "https://twitter.com/jongleberry"
   },
-  "repository": "jonathanong/routington",
+  "repository": "pillarjs/routington",
   "license": "MIT",
   "main": "lib",
   "files": [

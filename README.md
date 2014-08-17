@@ -1,8 +1,11 @@
 ## Routington
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
+[![Dependency Status][david-image]][david-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
 [![Gittip][gittip-image]][gittip-url]
 
 Routington is a [trie](http://en.wikipedia.org/wiki/Trie)-based URL router.
@@ -163,11 +166,19 @@ req.label = match.node.label
 
 IE9+
 
-[npm-image]: https://img.shields.io/npm/v/routington.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/routington.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/routington
-[travis-image]: https://img.shields.io/travis/jonathanong/routington.svg?style=flat
-[travis-url]: https://travis-ci.org/jonathanong/routington
-[coveralls-image]: https://img.shields.io/coveralls/jonathanong/routington.svg?style=flat
-[coveralls-url]: https://coveralls.io/r/jonathanong/routington?branch=master
-[gittip-image]: https://img.shields.io/gittip/jonathanong.svg?style=flat
+[github-tag]: http://img.shields.io/github/tag/pillarjs/routington.svg?style=flat-square
+[github-url]: https://github.com/pillarjs/routington/tags
+[travis-image]: https://img.shields.io/travis/pillarjs/routington.svg?style=flat-square
+[travis-url]: https://travis-ci.org/pillarjs/routington
+[coveralls-image]: https://img.shields.io/coveralls/pillarjs/routington.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/pillarjs/routington?branch=master
+[david-image]: http://img.shields.io/david/pillarjs/routington.svg?style=flat-square
+[david-url]: https://david-dm.org/pillarjs/routington
+[license-image]: http://img.shields.io/npm/l/routington.svg?style=flat-square
+[license-url]: LICENSE.md
+[downloads-image]: http://img.shields.io/npm/dm/routington.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/routington
+[gittip-image]: https://img.shields.io/gittip/jonathanong.svg?style=flat-square
 [gittip-url]: https://www.gittip.com/jonathanong/
