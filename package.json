@@ -3,7 +3,8 @@
   "description": "Trie-based URL Routing",
   "version": "1.0.0",
   "dependencies": {
-    "flatten": "0"
+    "http-errors": "~1.2.0",
+    "flatten": "~0.0.1"
   },
   "devDependencies": {
     "mocha": "1",
