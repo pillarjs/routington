@@ -1,7 +1,7 @@
 {
   "name": "routington",
   "description": "Trie-based URL Routing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "http-errors": "~1.2.0",
     "flatten": "~0.0.1"
