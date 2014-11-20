@@ -49,7 +49,7 @@ Every node on a tree is an instance of `Node`. You only construct the root. A `n
 #### nodes []Node = router.define(route)
 
 ```js
-var nodes = routington.define('/:identity(page|petition)/:id([0-9a-f]{24})')
+var nodes = router.define('/:identity(page|petition)/:id([0-9a-f]{24})')
 ```
 
 - `route` is a definition of a route and is an extension of Express' routing syntax.
